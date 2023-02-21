@@ -1,6 +1,7 @@
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Task {
@@ -60,6 +61,23 @@ public class Task {
 
     public void setFrequency(Frequency frequency) {
         this.frequency = frequency;
+    }
+
+    public Boolean appearsIn(Date date) {
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(title, task.title) && Objects.equals(description, task.description) && Objects.equals(id, task.id) && type == task.type && Objects.equals(date, task.date) && frequency == task.frequency;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, date, frequency);
     }
 
     @Override

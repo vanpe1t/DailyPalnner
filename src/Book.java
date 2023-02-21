@@ -33,40 +33,8 @@ public class Book {
     }
 
     public void getListOfTaskOnDate(Date date) {
-
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(date);
-        Calendar calendarTask = new GregorianCalendar();
-
         for (Task task: book.values()) {
-
-            calendarTask.setTime(task.getDate());
-
-            int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            int year = calendar.get(Calendar.YEAR);
-
-            int dayOfYearTask = calendarTask.get(Calendar.DAY_OF_YEAR);
-            int dayOfMonthTask = calendarTask.get(Calendar.DAY_OF_MONTH);
-            int dayOfWeekTask = calendarTask.get(Calendar.DAY_OF_WEEK);
-            int yearTask = calendarTask.get(Calendar.YEAR);
-
-            Frequency frequency = task.getFrequency();
-
-            if (frequency == Frequency.Single && dayOfYear == dayOfYearTask && year == yearTask) {
-                    System.out.println(task);
-            }
-            if (frequency == Frequency.Daily) {
-                System.out.println(task);
-            }
-            if (frequency == Frequency.Monthly && dayOfMonth == dayOfMonthTask) {
-                System.out.println(task);
-            }
-            if (frequency == Frequency.Weekly && dayOfWeek == dayOfWeekTask) {
-                System.out.println(task);
-            }
-            if (frequency == Frequency.Annual && dayOfYear == dayOfYearTask) {
+            if (task.appearsIn(date)) {
                 System.out.println(task);
             }
         }

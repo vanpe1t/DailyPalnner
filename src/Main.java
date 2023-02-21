@@ -75,7 +75,22 @@ public class Main {
         Frequency frequency = getFrequency();
         String description = getDescription();
 
-        Task task = new Task(title, taskType, taskDate, frequency, description);
+        Task task = null;
+
+        if (frequency == Frequency.Single) {
+            task = new OneTimeTask(title, taskType, taskDate, frequency, description);
+        } else if (frequency == Frequency.Daily) {
+            task = new DailyTask(title, taskType, taskDate, frequency, description);
+        } else if (frequency == Frequency.Monthly){
+            task = new MonthlyTask(title, taskType, taskDate, frequency, description);
+        } else if (frequency == Frequency.Weekly) {
+            task = new WeeklyTask(title, taskType, taskDate, frequency, description);
+        } else if (frequency == Frequency.Annual) {
+            task = new AnnualTask(title, taskType, taskDate, frequency, description);
+        } else {
+            System.out.println("Задача не добавлена!");
+            return;
+        };
 
         book.addTask(task);
     }
