@@ -8,5 +8,8 @@ public class DailyTask extends Task {
         super(title, type, date, frequency, description);
     }
 
-
+    @Override
+    public Boolean appearsIn(Date date) {
+        return true;
+    }
 }

@@ -6,12 +6,9 @@ public class Book {
 
     private HashMap<UUID, Task> book = new HashMap<>();
     private HashMap<UUID, Task> arhBook = new HashMap<>();
-    public void getFullList() {
-        for (Task task: book.values()) {
-            System.out.println(task);
-        }
+    public HashMap<UUID, Task> getFullList() {
+        return book;
     }
-
     public void addTask(Task task) {
         book.put(task.getId(), task);
     }
@@ -26,18 +23,18 @@ public class Book {
         return book.get(id);
     }
 
-    public void getArhList() {
-        for (Task task: arhBook.values()) {
-            System.out.println(task);
-        }
+    public HashMap<UUID, Task> getArhList() {
+        return arhBook;
     }
 
-    public void getListOfTaskOnDate(Date date) {
+    public HashMap<UUID, Task> getListOfTaskOnDate(Date date) {
+        HashMap<UUID, Task> listOfTaskOnDate = new HashMap<>();
         for (Task task: book.values()) {
             if (task.appearsIn(date)) {
-                System.out.println(task);
+                listOfTaskOnDate.put(task.getId(), task);
             }
         }
+        return listOfTaskOnDate;
     }
 
     public void getWordsCount() {

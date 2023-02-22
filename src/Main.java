@@ -10,43 +10,46 @@ public class Main {
     public static Book book = new Book();
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
-
         System.out.println("Введите команду (new, remove, list, edit, help):");
 
+        Scanner scanner = new Scanner(System.in);
         while (scanner.hasNext()) {
             String val = scanner.next();
-            if (val.equals("exit")) {
-                break;
-            } else if (val.equals("new")) {
-                addTask();
-            } else if (val.equals("remove")) {
-                removeTaskByID();
-            } else if (val.equals("list")) {
-                getListOfTasks();
-            } else if (val.equals("list_date")) {
-                getListOfTasksOnDate();
-            } else if (val.equals("list_arh")) {
-                getListOfArhTasks();
-            } else if (val.equals("edit")) {
-                editTask();
-            } else if (val.equals("count")) {
-                book.getWordsCount();
-            } else if (val.equals("help")) {
-                System.out.println("Список команд:");
-                System.out.println("Новая задача: new");
-                System.out.println("Список задач: list");
-                System.out.println("Список задач на дату: list_date");
-                System.out.println("Список архивных задач: list_arh");
-                System.out.println("Редактировать задачу: edit");
-                System.out.println("Посчитать слова в предложении: count");
-                System.out.println("Помощь: help");
-                System.out.println("Выход: exit");
-            } else {
-                System.out.println("Введена неизвестная команда.");
+
+            switch (val) {
+                case "exit":
+                    break;
+                case "new":
+                    addTask();
+                    break;
+                case "remove":
+                    removeTaskByID();
+                    break;
+                case "list":
+                    getListOfTasks();
+                    break;
+                case "list_date":
+                    getListOfTasksOnDate();
+                    break;
+                case "list_arh":
+                    getListOfArhTasks();
+                    break;
+                case "edit":
+                    editTask();
+                    break;
+                case "count":
+                    book.getWordsCount();
+                    break;
+                case "help":
+                    showHelpList();
+                    break;
+                default:
+                    System.out.println("Введена неизвестная команда.");
+                    break;
             }
         }
     }
+
     public static void addTask() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Вводим новую задачу:");
@@ -75,31 +78,50 @@ public class Main {
         Frequency frequency = getFrequency();
         String description = getDescription();
 
+        if (frequency == null) {
+            System.out.println("Задача не созданна!");
+            return;
+        }
+
         Task task = null;
 
-        if (frequency == Frequency.Single) {
-            task = new OneTimeTask(title, taskType, taskDate, frequency, description);
-        } else if (frequency == Frequency.Daily) {
-            task = new DailyTask(title, taskType, taskDate, frequency, description);
-        } else if (frequency == Frequency.Monthly){
-            task = new MonthlyTask(title, taskType, taskDate, frequency, description);
-        } else if (frequency == Frequency.Weekly) {
-            task = new WeeklyTask(title, taskType, taskDate, frequency, description);
-        } else if (frequency == Frequency.Annual) {
-            task = new AnnualTask(title, taskType, taskDate, frequency, description);
-        } else {
-            System.out.println("Задача не добавлена!");
-            return;
+        switch (frequency) {
+            case Single :
+                task = new OneTimeTask(title, taskType, taskDate, frequency, description);
+                break;
+            case Daily :
+                task = new DailyTask(title, taskType, taskDate, frequency, description);
+                break;
+            case Weekly :
+                task = new WeeklyTask(title, taskType, taskDate, frequency, description);
+                break;
+            case Monthly :
+                task = new MonthlyTask(title, taskType, taskDate, frequency, description);
+                break;
+            case Annual :
+                task = new AnnualTask(title, taskType, taskDate, frequency, description);
+                break;
+            default :
+                task = null;
+                System.out.println("Задача не созданна!");
         };
 
         book.addTask(task);
     }
+
     public static void getListOfTasks() {
-        book.getFullList();
+        HashMap<UUID, Task> list = book.getFullList();
+        for (Task task: list.values()) {
+            System.out.println(task);
+        }
     }
     public static void getListOfArhTasks() {
-        book.getArhList();
+        HashMap<UUID, Task> list = book.getArhList();
+        for (Task task: list.values()) {
+            System.out.println(task);
+        }
     }
+
     public static void removeTaskByID() {
         UUID id;
         System.out.println("Введите ID:");
@@ -114,6 +136,7 @@ public class Main {
             book.removeTask(id);
         }
     }
+
     public static void editTask() {
         System.out.println("Введите ID:");
         Scanner scanner = new Scanner(System.in);
@@ -146,6 +169,18 @@ public class Main {
                 }
             }
         }
+    }
+
+    public static void showHelpList() {
+        System.out.println("Список команд:");
+        System.out.println("Новая задача: new");
+        System.out.println("Список задач: list");
+        System.out.println("Список задач на дату: list_date");
+        System.out.println("Список архивных задач: list_arh");
+        System.out.println("Редактировать задачу: edit");
+        System.out.println("Посчитать слова в предложении: count");
+        System.out.println("Помощь: help");
+        System.out.println("Выход: exit");
     }
 
     public static Date getDate(Boolean withTime) {
@@ -182,25 +217,34 @@ public class Main {
     public static Frequency getFrequency() {
 
         Scanner scanner = new Scanner(System.in);
-        Frequency frequency= null;
+        Frequency frequency = null;
 
         System.out.println("Введите переодичность (single, daily, weekly, monthly, annual):");
         if (scanner.hasNext()) {
             String strFrequency = scanner.next();
-            if (strFrequency.equals("single")) {
-                frequency = Frequency.Single;
-            } else if (strFrequency.equals("daily")) {
-                frequency = Frequency.Daily;
-            } else if (strFrequency.equals("weekly")) {
-                frequency = Frequency.Weekly;
-            } else if (strFrequency.equals("monthly")) {
-                frequency = Frequency.Monthly;
-            } else if (strFrequency.equals("annual")) {
-                frequency = Frequency.Annual;
-            } else {
-                System.out.println("Переодичность введена некорректно.");
+
+            switch (strFrequency) {
+                case "single":
+                    frequency = Frequency.Single;
+                    break;
+                case "daily":
+                    frequency = Frequency.Daily;
+                    break;
+                case "weekly":
+                    frequency = Frequency.Weekly;
+                    break;
+                case "monthly":
+                    frequency = Frequency.Monthly;
+                    break;
+                case "annual":
+                    frequency = Frequency.Annual;
+                    break;
+                default:
+                    frequency = null;
+                    System.out.println("Переодичность введена некорректно.");
             }
         }
+
         return  frequency;
     }
 
@@ -219,6 +263,9 @@ public class Main {
 
     public static void getListOfTasksOnDate() {
         Date dateOfTask = getDate(false);
-        book.getListOfTaskOnDate(dateOfTask);
+        HashMap<UUID, Task> list = book.getListOfTaskOnDate(dateOfTask);
+        for (Task task: list.values()) {
+            System.out.println(task);
+        }
     }
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Task {
+public abstract class Task {
 
     private String title;
 
@@ -16,7 +16,6 @@ public class Task {
     private Date date;
 
     private Frequency frequency;
-
 
     public Task(String title, TaskType type, Date date, Frequency frequency, String description) {
         this.id = UUID.randomUUID();
@@ -63,9 +62,7 @@ public class Task {
         this.frequency = frequency;
     }
 
-    public Boolean appearsIn(Date date) {
-        return true;
-    }
+    public abstract Boolean appearsIn(Date date);
 
     @Override
     public boolean equals(Object o) {
